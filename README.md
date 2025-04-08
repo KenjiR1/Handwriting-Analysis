@@ -10,5 +10,5 @@ Used to extract data from handwritten text
 
 **Curvature** - Using an algorithm the approximates the contour of a shape, the curvature is the ratio of how compressed the new approximation is to the original. In a sense, it measures the complexity or curvature of the shape
 
-**Readability** - Using pytorch to interpret the written text, it is able to act as a consistent readibility grader based on how many sequences of 2 or more characters it gets correct
+**Readability** - Using pytessearct to interpret the written text, it is able to act as a consistent readibility grader based on how many sequences of 2 or more characters it gets correct
 
