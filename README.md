@@ -1,7 +1,7 @@
-### **Handwriting Analysis Project**
+## **Handwriting Analysis Project**
 Used to extract data from handwritten text
 
-#### **Dependent Variables**
+### **Dependent Variables**
 **Area** - The number of pixels within a continous shape
 
 **Size** - The size of a minimum fitting rectangle around each continous shape (in # of pixels)
