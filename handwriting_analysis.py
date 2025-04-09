@@ -18,7 +18,7 @@ def get_image_files(folder, extension=(".jpg", ".jpeg", ".png")):
     ]
 
 def extract_text(infile):
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    pytesseract.pytesseract.tesseract_cmd = r'EXE PATH' # Add path to pytesseract executable if neccesary
     return pytesseract.image_to_string(infile)
 
 def load_image(infile):
