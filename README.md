@@ -2,7 +2,7 @@
 Used to extract data from handwritten text
 
 ### **Dependent Variables**
-**Area** - The number of pixels within a continous shape
+**Area** - The number of pixels within a continous shape (Letters or clumps of letters)
 
 **Size** - The size of a minimum fitting rectangle around each continous shape (in # of pixels)
 
