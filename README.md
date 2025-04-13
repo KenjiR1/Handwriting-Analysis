@@ -1,5 +1,5 @@
 ## **Handwriting Analysis Project**
-Used to extract data from handwritten text
+Python pipeline created to extract useful metrics from handwritten text. Developed as an experiment to measure how the time spent writing affects various handwriting characteristics. The code is general-purpose, and can be adapted to analyze other independent variables as well.
 
 ### **Dependent Variables**
 **Area** - The number of pixels within a continous shape (Letters or clumps of letters)
