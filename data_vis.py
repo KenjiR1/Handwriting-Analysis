@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 15 13:34:44 2025
-
-@author: kenji
-"""
+# This code is for plotting any dependent variable vs time, color-coded by the individuals
+# who wrote the text.
 
 import matplotlib.pyplot as plt
 import pandas as pd
