@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 10 21:56:09 2025
-@author: kenji
-"""
 
 import cv2
 import statistics
@@ -18,7 +14,7 @@ def get_image_files(folder, extension=(".jpg", ".jpeg", ".png")):
     ]
 
 def extract_text(infile):
-    pytesseract.pytesseract.tesseract_cmd = r'EXE PATH' # Add path to pytesseract executable if neccesary
+    pytesseract.pytesseract.tesseract_cmd = 'TESSERACT.EXE PATH' # Update with tesseract.exe path
     return pytesseract.image_to_string(infile)
 
 def load_image(infile):
@@ -60,32 +56,38 @@ def calculate_statistics(data, name):
         f"{name}_stdev": round(statistics.stdev(data),2) if len(data) > 1 else 0
     }
 
-def calculate_readibility(input_text, extracted_text):
-    extracted_text = extracted_text.replace(" ","")
-    input_text = input_text.replace(" ","")
-    n = len(extracted_text)-1
-    dp = [0]*(n+1)
-    dp[n] = 0
-    seq_length = 1
-
-    for i in range(n-1,-1,-1):
-        sequence = extracted_text[i:i+seq_length+1]
-        if sequence in input_text: 
-            dp[i] = 1
-            dp[i-1] = 1
-            seq_length+=1
-        else:
-            dp[i] = 0
-            seq_length = 0
-        
-    total_matches = sum(dp)
-    readibility = round(total_matches/len(input_text),4)
+def calculate_readability(input_text, extracted_text):
+    s_extract = extracted_text.replace(" ","")
+    s_true = input_text.replace(" ","")
     
-    return readibility
+    m = len(s_extract) # Row
+    n = len(s_true) # Column
+    
+    dp = [[0 for _ in range(n+1)] for _ in range(m+1)]
+    
+    for i in range(m+1):
+        dp[i][0] = i
+    for j in range(n+1):
+        dp[0][j] = j
+    
+    
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            cost = 0 if s_extract[i - 1] == s_true[j - 1] else 1
+            dp[i][j] = min(
+                cost + dp[i-1][j-1], # Sub
+                1 + dp[i][j-1], # Insert
+                1 + dp[i-1][j], # Delete
+                )
+    
+    cost = dp[m][n]
+    readability = max(1 - cost / n,0)
+    
+    return readability
 
 def analyze_text(infile, input_text):
     text = extract_text(infile)
-    readibility = calculate_readibility(input_text, text)
+    readibility = calculate_readability(input_text, text)
     gray_image = load_image(infile)
     contours, _ = find_contours(gray_image)
     areas, sizes, centers, curvatures, dist = analyze_contours(contours)
@@ -95,7 +97,7 @@ def analyze_text(infile, input_text):
         "continous_lines": len(areas),
         "text": text.strip().replace('\n', ' ').replace('=',''),
         "area_size_ratio": round(statistics.mean(areas) / statistics.mean(sizes), 2) if sizes else 0,
-        "readibility": readibility
+        "readability": readibility
     }
 
     features.update(calculate_statistics(areas, "area"))
@@ -105,13 +107,13 @@ def analyze_text(infile, input_text):
     
     return features
 
-def export_csv(features_list, out_file="handwrite_analysis_results.csv"):
+def export_csv(features_list, out_file="total_results.csv"):
     df = pd.DataFrame(features_list)
     df.to_csv(out_file, index=False)
 
 def main():
-    input_text = "i think hamburgers and french fries work well together"
-    input_folder = "handwriting_samples_30"
+    input_text = "" # Replace with actual sentence
+    input_folder = "" # Replace with folder
     input_files = get_image_files(input_folder)
 
     all_features = []
@@ -124,7 +126,7 @@ def main():
             print(f"Error with {infile}: {e}")
 
     export_csv(all_features)
-    print("Done! CSV saved.")
+    print("Finished! CSV results saved.")
 
 if __name__ == "__main__":
     main()
