@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 16 13:40:18 2025
-
-@author: kenji
-"""
 # Code for creating model object
 # input_dim = number of features (dependent variables)
 # Contains 3 neural layers, 2 activation functions
