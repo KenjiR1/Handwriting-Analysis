@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Main code for collecting dependent variables from handwritten text. handwritten text files should be
+# jpg or png, and be stored within a folder. The export will be a .csv file
 
 import cv2
 import statistics
@@ -6,7 +8,7 @@ import pytesseract
 import pandas as pd
 import os
 
-def get_image_files(folder, extension=(".jpg", ".jpeg", ".png")):
+def get_image_files(folder, extension=(".jpg", ".png")):
     return [
         os.path.join(folder, f)
         for f in os.listdir(folder)
@@ -44,8 +46,8 @@ def analyze_contours(contours,area_threshold = 2):
             curv_value = len(approx) / len(contour)
             curvatures.append(curv_value)
 
-    centers.sort(key=lambda p: p[0])
-    dist = [centers[i + 1][0] - centers[i][0] for i in range(len(centers) - 1)]
+    centers.sort(key=lambda c: c[0])
+    dist = [centers[i + 1][0] - centers[i][0] for i in range(len(centers) - 1)] # subtract each center by the previous center
 
     return areas, sizes, centers, curvatures, dist
 
