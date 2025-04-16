@@ -1,7 +1,7 @@
-## **Handwriting Analysis Project**
+# **Handwriting Analysis Project**
 Python pipeline created to extract useful metrics from handwritten text. Developed as an experiment to measure how the time spent writing affects various handwriting characteristics. The code is general-purpose, and can be adapted to analyze other independent variables as well.
 
-### **Dependent Variables**
+## **Dependent Variables**
 **Continous Lines** - How many continous lines/shapes there are in the written text. A lower value would indicate letters are more connected
 
 **Area** - The number of pixels within a continous shape (Letters or clumps of letters)
