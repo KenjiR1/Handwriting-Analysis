@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 16 13:48:26 2025
-@author: kenji
-"""
 
 import pandas as pd
 import torch
