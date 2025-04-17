@@ -1,7 +1,7 @@
 # **Handwriting Analysis Project**
 Python pipeline created to extract useful metrics from handwritten text. Developed as an experiment to measure how the time spent writing affects various handwriting characteristics. The code is general-purpose, and can be adapted to analyze other independent variables as well.
 
-## **Dependent Variables**
+## **Files**
 ** handwriting_analysis.py ** - Pipeline for analyzing handwritten images
 ** data_vis.py ** - Visualize dependent variable data by group
 ** TernaryClassifier.py ** - Contains the neural network architecture
