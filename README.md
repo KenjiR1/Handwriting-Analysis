@@ -2,6 +2,12 @@
 Python pipeline created to extract useful metrics from handwritten text. Developed as an experiment to measure how the time spent writing affects various handwriting characteristics. The code is general-purpose, and can be adapted to analyze other independent variables as well.
 
 ## **Dependent Variables**
+** handwriting_analysis.py ** - Pipeline for analyzing handwritten images
+** data_vis.py ** - Visualize dependent variable data by group
+** TernaryClassifier.py ** - Contains the neural network architecture
+** TernaryClassifierModel.py ** - Contains the processing, training, and evaluating for the model
+
+## **Dependent Variables**
 **Continous Lines** - How many continous lines/shapes there are in the written text. A lower value would indicate letters are more connected
 
 **Area** - The number of pixels within a continous shape (Letters or clumps of letters)
