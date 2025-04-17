@@ -47,7 +47,7 @@ def analyze_contours(contours,area_threshold = 2):
             curvatures.append(curv_value)
 
     centers.sort(key=lambda c: c[0])
-    dist = [centers[i + 1][0] - centers[i][0] for i in range(len(centers) - 1)] # subtract each center by the previous center
+    dist = [centers[i + 1][0] - centers[i][0] for i in range(len(centers) - 1)] # subtract each center x-cord by the previous center x-cord
 
     return areas, sizes, centers, curvatures, dist
 
@@ -94,7 +94,7 @@ def analyze_text(infile, input_text):
     contours, _ = find_contours(gray_image)
     areas, sizes, centers, curvatures, dist = analyze_contours(contours)
 
-    features = {
+    dependent_vars = {
         "filename": os.path.basename(infile),
         "continous_lines": len(areas),
         "text": text.strip().replace('\n', ' ').replace('=',''),
@@ -102,12 +102,12 @@ def analyze_text(infile, input_text):
         "readability": readibility
     }
 
-    features.update(calculate_statistics(areas, "area"))
-    features.update(calculate_statistics(sizes, "size"))
-    features.update(calculate_statistics(dist, "spacing"))
-    features.update(calculate_statistics(curvatures, "curvature"))
+    dependent_vars.update(calculate_statistics(areas, "area"))
+    dependent_vars.update(calculate_statistics(sizes, "size"))
+    dependent_vars.update(calculate_statistics(dist, "spacing"))
+    dependent_vars.update(calculate_statistics(curvatures, "curvature"))
     
-    return features
+    return dependent_vars
 
 def export_csv(features_list, out_file="total_results.csv"):
     df = pd.DataFrame(features_list)
@@ -118,16 +118,16 @@ def main():
     input_folder = "" # Replace with folder
     input_files = get_image_files(input_folder)
 
-    all_features = []
+    all_data = []
     for infile in input_files:
         try:
-            features = analyze_text(infile, input_text)
-            all_features.append(features)
+            dependent_vars = analyze_text(infile, input_text)
+            all_data.append(dependent_vars)
             print(f"Processed: {infile}")
         except Exception as e:
             print(f"Error with {infile}: {e}")
 
-    export_csv(all_features)
+    export_csv(all_data)
     print("Finished! CSV results saved.")
 
 if __name__ == "__main__":
