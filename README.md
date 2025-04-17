@@ -24,6 +24,8 @@ Python pipeline created to extract useful metrics from handwritten text. Develop
 **Curvature** - Using an algorithm the approximates the contour of a shape, the curvature is the ratio of how compressed the new approximation is to the original. In a sense, it measures the complexity or curvature of the shape. A higher score indicates higher complexity or curvature.
 
 **Readability** - A measure of what the written text was interpreted as compared to what it should be. It uses PyTessearct as a consistent "reader", and compares the string that it extracts to the correct string using the levenshtein distance algorithm. This algorithm functions based on how many "edits" you need to make to align two strings, and calculates readibility by dividing the number of edits made by the number of characters in the original sentence. It is capped between 0 and 1, and a higher score indicates better readability.
+## **Feedforward Neural Network**
+The fnn was implemented to predict whether a written text fits in one of three categories: fast, normal, and slow. It uses 3 layers and 2 activation functions, and achieved a max accuracy of 93.33%. However, the accuracy varies, as the training data only consists of 60 samples, and the testing data 30.
 
 ## **Experiment Setup**
 The goal of our experiment was to investigate how the time we spend writing a sentence influences certain handwriting characteristics. Our indepdent variables involved writing fast, normal, and slow (or carefully), as well with a stylus, pencil, and pen. We collected 10 samples per indepedent variable combination, for a total of 90 samples each. We were only allowed to collect data from the members of our group, so we collected 270 samples total.
