@@ -22,33 +22,23 @@ def create_dfs(df, train_samples=20):
     # train_samples refers to how many samples in a specific classifier will be used for training
     # (the remaining will be used for testing)
     
-    # Concatinate the training data into one data frame
-    # .sample(frac=1) shuffles the data set randomly. reset row indices after shuffling
-    
+    # Concatinate the training data into one data frame, shuffle data set randomly
     train_df = pd.concat([fast[:train_samples],
                          normal[:train_samples], 
                          careful[:train_samples]]).sample(frac=1).reset_index(drop=True)
-    # print(train_df)
-    # 60 rows x 16 columns
     test_df = pd.concat([fast[train_samples:], 
                         normal[train_samples:], 
                         careful[train_samples:]]).sample(frac=1).reset_index(drop=True)
-    # 30 rows x 16 columns
     return train_df, test_df
 
 def preprocess_data(train_df, test_df, class_col="class"):
-    # Takes the train and test data frames, and the column containing the labels
     """ Convert data frames to numpy arrays, isolate classifier column"""
-    
-    # Isolate create new dataframe excluding the "class" column, and convert to numpy tensor
-    # Force numbers to be specific datatype. float32 is faster
+    # Create new dataframe excluding the "class" column, and convert to numpy tensor
     dvar_train = train_df.drop(columns=[class_col]).values.astype("float32")
+    dvar_test = test_df.drop(columns=[class_col]).values.astype("float32")
     
     # Create new dataframe with just the "class" column, convert to numpy tensor
     classifier_train = train_df[class_col].values.astype("int64")
-    
-    # Repeat this process for the training set
-    dvar_test = test_df.drop(columns=[class_col]).values.astype("float32")
     classifier_test = test_df[class_col].values.astype("int64")
     
     # Scale dependent variables so mean = 0, stdev = 1
@@ -60,34 +50,28 @@ def preprocess_data(train_df, test_df, class_col="class"):
 
 def create_data_loaders(x_train, y_train, x_test, y_test, batch_size=16):
     """Create PyTorch DataLoader objects for training and testing."""
-    # Create a tensor object containing the training array and the classifier array
+    # Concatonate into a tensor
     train_dataset = TensorDataset(torch.tensor(x_train), torch.tensor(y_train))
-    # Same thing for the test dataset
     test_dataset = TensorDataset(torch.tensor(x_test), torch.tensor(y_test))
-    
-    # PyTorch utility, allows to iterate over the data, each of size = batch_size
-    # shuffle randomizes the data order
+
+    # Create data loader
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     
     return train_loader, test_loader
 
 def initialize_model(input_dim, device):
-    """ Create model using # of dependent vars, specify using the cpu"""
+    """ Create model using # of dependent vars, specify use of the cpu"""
     model = TernaryClassifier(input_dim)
     return model.to(device)
 
 def train_classifier(model, train_loader, device, learning_rate=0.001, epochs=100):
     """ Train the model """
-    # Measures the difference between the predicted probabilities and actual labels
     criterion = nn.CrossEntropyLoss()
-    # Adam is adaptive optimizer. this line gives acces to the models parameters (weights and biases)
-    # so it can update them
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    # learning rate controls step size for parameter updates
     
     for epoch in range(epochs):
-        model.train() # Set model to training mode
+        model.train()
         total_loss = 0
         # batch_x = input dependent vars
         # batch_y = classifier labels
@@ -111,31 +95,29 @@ def train_classifier(model, train_loader, device, learning_rate=0.001, epochs=10
 
 def evaluate_model(model, test_loader, device):
     """ Test the models performance """
-    model.eval() # Put the model in eval mode
+    model.eval()
     correct = 0
     total = 0
     
-    with torch.no_grad(): # Tell PyTorch not totrack gradients, because no training
+    with torch.no_grad(): # Don't track gradients
         for batch_x, batch_y in test_loader:
-            batch_x, batch_y = batch_x.to(device), batch_y.to(device) # batch data to cpu
+            batch_x, batch_y = batch_x.to(device), batch_y.to(device)
             outputs = model(batch_x) # Output predictions for batch e.g [0.2,0.5,0.3]
             _, predicted = torch.max(outputs, 1) # choose class with highest score
-            total += batch_y.size(0) # tracks how many we've done
-            correct += (predicted == batch_y).sum().item() # tracks how many we got correct
+            total += batch_y.size(0)
+            correct += (predicted == batch_y).sum().item()
     
     accuracy = correct / total * 100
     print(f"Test Accuracy: {round(accuracy,2)}%")
     return accuracy
 
 def main():
-    # Configuration
+    # Config
     filename = "corpus.csv"
     batch_size = 16
     epochs = 50
     learning_rate = 0.001
     train_samples_per_class = 20
-    
-    # Device setup
     device = torch.device("cpu")
     
     # Data pipeline
@@ -144,12 +126,11 @@ def main():
     dvar_train, classifier_train, dvar_test, classifier_test = preprocess_data(train_df, test_df)
     train_loader, test_loader = create_data_loaders(dvar_train, classifier_train, dvar_test, classifier_test, batch_size)
     
-    # Model setup
-    input_dim = dvar_train.shape[1] # Returns 2nd dimension, which is the number of dependent vars
+    # Model Initialization
+    input_dim = dvar_train.shape[1] # 2nd dimension is equivalent to # of dependent variables
     model = initialize_model(input_dim, device) # Create instance of the TernaryClassifier class
-    # Initializes a fully defined neural network
     
-    # Training and evaluation
+    # Train
     train_classifier(model, train_loader, device, learning_rate, epochs)
     evaluate_model(model, test_loader, device)
 
