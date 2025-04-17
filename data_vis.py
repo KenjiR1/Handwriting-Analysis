@@ -39,7 +39,7 @@ def line_graph(data, x_col, y_col):
         
     min_x = int(data[x_col].min())
     max_x = int(data[x_col].max())
-    ticks = list(range(min_x, max_x + 2, 2))
+    ticks = list(range(min_x, max_x + 2, 2)) # Space x-axis by 2 seconds
     plt.xticks(ticks)
 
     plt.xlabel(x_col)
@@ -52,7 +52,7 @@ def line_graph(data, x_col, y_col):
 
 
 def main():
-    filename = "total_results.csv"
+    filename = "total_results.csv" # Replace with .csv file
     dv = "readability" # Replace with dependent variable
     process(filename, dv)
 
